@@ -17,7 +17,7 @@ export interface ZoneSettings {
 }
 
 export type InstallationHeight = 'tripod' | 'ceiling'
-export type MocapMode = 'bodyOnly' | 'handsOn'
+export type MocapMode = 'setup' | 'bodyOnly' | 'handsOn'
 export type LightCondition = 'bright' | 'less' | 'dark'
 
 interface SimulatorState {
@@ -40,7 +40,7 @@ export const useSimulatorStore = create<SimulatorState>((set) => ({
     distance: 3.5,
   },
   installationHeight: 'tripod',
-  mocapMode: 'bodyOnly',
+  mocapMode: 'setup',
   lightCondition: 'bright',
   
   setZoneSettings: (settings) =>
@@ -51,7 +51,8 @@ export const useSimulatorStore = create<SimulatorState>((set) => ({
       newSettings.length = Math.max(LENGTH_MIN, Math.min(LENGTH_MAX, newSettings.length))
       newSettings.height = Math.max(HEIGHT_MIN, Math.min(HEIGHT_MAX, newSettings.height))
       newSettings.distance = Math.max(DISTANCE_MIN, Math.min(DISTANCE_MAX, newSettings.distance))
-      return { zoneSettings: newSettings }
+      // Automatically switch to setup mode when zone settings change
+      return { zoneSettings: newSettings, mocapMode: 'setup' }
     }),
   setInstallationHeight: (height) => set({ installationHeight: height }),
   setMocapMode: (mode) =>
@@ -64,9 +65,9 @@ export const useSimulatorStore = create<SimulatorState>((set) => ({
     }),
   setLightCondition: (condition) =>
     set((state) => {
-      // If switching to dark and mocap mode is handsOn, reset to bodyOnly
+      // If switching to dark and mocap mode is handsOn, reset to setup (handsOn not available in dark)
       if (condition === 'dark' && state.mocapMode === 'handsOn') {
-        return { lightCondition: condition, mocapMode: 'bodyOnly' }
+        return { lightCondition: condition, mocapMode: 'setup' }
       }
       return { lightCondition: condition }
     }),

@@ -32,6 +32,7 @@ export function MichelleModel() {
   const dancingFbx = useFBX(michelleDancing)
   
   const { zoneSettings, mocapMode, lightCondition } = useSimulatorStore()
+  const isSetupMode = mocapMode === 'setup'
   const mixerRef = useRef<AnimationMixer | null>(null)
   const spotlightRef = useRef<SpotLight>(null)
   const targetRef = useRef<Object3D>(null)
@@ -59,6 +60,10 @@ export function MichelleModel() {
   
   // Determine which animation to play based on mocapMode and lightCondition
   const currentAnimation = useMemo(() => {
+    // Setup mode: no animation (T-pose)
+    if (mocapMode === 'setup') {
+      return null
+    }
     if (mocapMode === 'bodyOnly') {
       // Body Only mode: always play dancing animation regardless of light condition
       return dancingFbx.animations[0]
@@ -75,12 +80,12 @@ export function MichelleModel() {
   
   // Setup and update animation mixer
   useEffect(() => {
-    if (baseFbx && currentAnimation) {
+    if (baseFbx && currentAnimation && !isSetupMode) {
       // Create new mixer for the model
       const mixer = new AnimationMixer(baseFbx)
       mixerRef.current = mixer
       
-      // Play the current animation
+      // Play the animation
       const action = mixer.clipAction(currentAnimation)
       action.reset()
       action.play()
@@ -89,8 +94,11 @@ export function MichelleModel() {
         mixer.stopAllAction()
         mixer.uncacheRoot(baseFbx)
       }
+    } else {
+      // In setup mode, clear the mixer to show T-pose
+      mixerRef.current = null
     }
-  }, [baseFbx, currentAnimation])
+  }, [baseFbx, currentAnimation, isSetupMode])
   
   // Setup spotlight target - must add target to scene
   useEffect(() => {
@@ -101,9 +109,9 @@ export function MichelleModel() {
     }
   }, [zoneSettings.distance])
   
-  // Update animation on each frame
+  // Update animation on each frame (skip in setup mode to maintain T-pose)
   useFrame((_, delta) => {
-    if (mixerRef.current) {
+    if (mixerRef.current && !isSetupMode) {
       mixerRef.current.update(delta)
     }
   })
