@@ -1,77 +1,15 @@
-import { useRef, useState, useEffect, useMemo } from 'react'
+import { useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { OrbitControls, Grid, GizmoHelper, GizmoViewport, useGLTF, useFBX, Line, Text } from '@react-three/drei'
+import { OrbitControls, Grid, GizmoHelper, GizmoViewport, useGLTF, Line, Text } from '@react-three/drei'
+import { DoubleSide } from 'three'
+import { useSimulatorStore, type LightCondition } from '@/store/simulator-store'
+import { MichelleModel } from './MichelleModel'
 import tracinModel from '../assets/tracin.glb'
-import michelleModel from '../assets/Michelle.fbx'
-import michelleComplicatedGesture from '../assets/Michelle_Comlicated_Gesture.fbx'
-import michelleSimpleGesture from '../assets/Michelle_Simple_Gesture.fbx'
-import michelleDancing from '../assets/Michelle_Dancing.fbx'
-import { DoubleSide, AnimationMixer } from 'three'
-import { useSimulatorStore } from '@/store/simulator-store'
 
 function TracinModel() {
   const gltf = useGLTF(tracinModel)
   return <primitive object={gltf.scene} scale={0.001} position={[0, 1.0, 0]} rotation={[0, Math.PI, 0]} />
 }
-
-function MichelleModel() {
-  const baseFbx = useFBX(michelleModel)
-  const complicatedGestureFbx = useFBX(michelleComplicatedGesture)
-  const simpleGestureFbx = useFBX(michelleSimpleGesture)
-  const dancingFbx = useFBX(michelleDancing)
-  
-  const { zoneSettings, mocapMode, lightCondition } = useSimulatorStore()
-  const mixerRef = useRef<AnimationMixer | null>(null)
-  
-  // Determine which animation to play based on mocapMode and lightCondition
-  const currentAnimation = useMemo(() => {
-    if (mocapMode === 'bodyOnly') {
-      // Body Only mode: always play dancing animation regardless of light condition
-      return dancingFbx.animations[0]
-    } else {
-      // Hands On mode: depends on light condition
-      if (lightCondition === 'bright') {
-        return complicatedGestureFbx.animations[0]
-      } else {
-        // 'less' light condition (dark is disabled for handsOn)
-        return simpleGestureFbx.animations[0]
-      }
-    }
-  }, [mocapMode, lightCondition, complicatedGestureFbx, simpleGestureFbx, dancingFbx])
-  
-  // Setup and update animation mixer
-  useEffect(() => {
-    if (baseFbx && currentAnimation) {
-      // Create new mixer for the model
-      const mixer = new AnimationMixer(baseFbx)
-      mixerRef.current = mixer
-      
-      // Play the current animation
-      const action = mixer.clipAction(currentAnimation)
-      action.reset()
-      action.play()
-      
-      return () => {
-        mixer.stopAllAction()
-        mixer.uncacheRoot(baseFbx)
-      }
-    }
-  }, [baseFbx, currentAnimation])
-  
-  // Update animation on each frame
-  useFrame((_, delta) => {
-    if (mixerRef.current) {
-      mixerRef.current.update(delta)
-    }
-  })
-  
-  // FBX models are often in centimeters, scale down to meters
-  // Position Michelle at distance from Tracin (which is at 0, 1.0, 0)
-  // Michelle moves along the Z-axis based on distance setting
-  return <primitive object={baseFbx} scale={0.01} position={[0, 0, -zoneSettings.distance]} />
-}
-
-import type { LightCondition } from '@/store/simulator-store'
 
 // Light settings for each condition
 const lightSettings = {
@@ -239,6 +177,12 @@ export function Viewport() {
       >
         <color attach="background" args={[settings.background]} />
         <SceneLighting lightCondition={lightCondition} />
+        
+        {/* Ground plane to receive spotlight */}
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]} receiveShadow>
+          <planeGeometry args={[50, 50]} />
+          <meshStandardMaterial color="#222228" roughness={0.9} metalness={0.1} />
+        </mesh>
         
         {/* Ground grid for reference */}
         <Grid
