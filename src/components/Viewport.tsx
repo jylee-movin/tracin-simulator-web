@@ -8,6 +8,7 @@ import { MichelleModel } from './MichelleModel'
 import { Zone } from './Zone'
 import { SceneLighting, lightSettings } from './SceneLighting'
 import { CameraController } from './CameraController'
+// import { CameraPositionDisplay } from './CameraPositionDisplay'
 
 export function Viewport() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -16,10 +17,10 @@ export function Viewport() {
   const settings = lightSettings[lightCondition]
   
   return (
-    <div className="flex-1 bg-background">
+    <div className="flex-1 min-h-0 bg-background">
       <Canvas
         camera={{
-          position: [8, 6, 8],
+          position: [8, 6, 6],
           fov: 50,
           near: 0.1,
           far: 1000,
@@ -65,6 +66,9 @@ export function Viewport() {
           michelleDistance={zoneSettings.distance}
           orbitControlsRef={orbitControlsRef}
         />
+        
+        {/* Temporary camera position display */}
+        {/* <CameraPositionDisplay /> */}
         
         <OrbitControls
           ref={orbitControlsRef}

@@ -43,7 +43,11 @@ function DimensionInput({ label, value, onChange, min = 0, max }: DimensionInput
 }
 
 // Zone Settings Section
-export function ZoneSettingsPanel() {
+interface ZoneSettingsPanelProps {
+  className?: string
+}
+
+export function ZoneSettingsPanel({ className }: ZoneSettingsPanelProps) {
   const { zoneSettings, setZoneSettings } = useSimulatorStore()
 
   const handleChange = (key: keyof ZoneSettingsType) => (value: number) => {
@@ -51,9 +55,9 @@ export function ZoneSettingsPanel() {
   }
 
   return (
-    <Card className="flex flex-col p-4 rounded-none border-0 border-r flex-1">
+    <Card className={`flex flex-col items-center p-4 rounded-none border-0 border-r ${className ?? ''}`}>
       <h3 className="text-sm font-semibold mb-4">Mocap Zone Setting</h3>
-      <div className="flex gap-4">
+      <div className="flex flex-wrap gap-4 justify-center">
         <DimensionInput
           label="Width"
           value={zoneSettings.width}

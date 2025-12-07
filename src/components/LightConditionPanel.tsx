@@ -3,7 +3,11 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Card } from '@/components/ui/card'
 
-export function LightConditionPanel() {
+interface LightConditionPanelProps {
+  className?: string
+}
+
+export function LightConditionPanel({ className }: LightConditionPanelProps) {
   const { lightCondition, setLightCondition, mocapMode } = useSimulatorStore()
 
   const isDarkDisabled = mocapMode === 'handsOn'
@@ -16,11 +20,22 @@ export function LightConditionPanel() {
     }
   }
 
+  const getGestureComment = () => {
+    if (mocapMode === 'handsOn') {
+      switch (lightCondition) {
+        case 'bright': return 'Complicated gestures available'
+        case 'less': return 'Only simple gestures available'
+        default: return null
+      }
+    }
+    return null
+  }
+
   return (
-    <Card className="flex flex-col p-4 rounded-none border-0 border-r flex-1">
+    <Card className={`flex flex-col items-center p-4 rounded-none border-0 border-r ${className ?? ''}`}>
       <h3 className="text-sm font-semibold mb-4">Light Condition</h3>
-      <div className="flex flex-col gap-3">
-        <div className="flex gap-2">
+      <div className="flex flex-col gap-3 items-center">
+        <div className="flex flex-col min-[900px]:flex-row gap-2">
           <Button
             onClick={() => setLightCondition('bright')}
             variant={lightCondition === 'bright' ? 'default' : 'outline'}
@@ -52,9 +67,16 @@ export function LightConditionPanel() {
             )}
           </Button>
         </div>
-        <Label className="text-sm text-muted-foreground">
-          {getLightLabel()}
-        </Label>
+        <div className="flex flex-col gap-1 self-start">
+          <Label className="text-sm text-muted-foreground">
+            {getLightLabel()}
+          </Label>
+          {getGestureComment() && (
+            <span className="text-xs text-muted-foreground/80">
+              {getGestureComment()}
+            </span>
+          )}
+        </div>
       </div>
     </Card>
   )

@@ -3,7 +3,6 @@ import { useFrame } from '@react-three/fiber'
 import { Line, Text } from '@react-three/drei'
 import { DoubleSide } from 'three'
 import { useSimulatorStore } from '@/store/simulator-store'
-import type { _ } from 'node_modules/tailwindcss/dist/colors-b_6i0Oi7'
 
 // Logo brand color - movin yellow
 const BRAND_COLOR = '#DCFF00'
@@ -53,6 +52,7 @@ export function ZoneVisualization() {
           transparent 
           opacity={0.12} 
           side={DoubleSide}
+          depthWrite={false}
         />
       </mesh>
       
@@ -87,13 +87,34 @@ export function ZoneVisualization() {
 // Dimension Change Effects
 // ============================================
 
-// Arrow head component for dimension visualization
+// Arrow head component for dimension visualization - simple chevron shape
+// Points upward (^) by default along Y-axis to match cone geometry behavior
 function ArrowHead({ position, rotation, opacity }: { position: [number, number, number]; rotation: [number, number, number]; opacity: number }) {
+  const size = 0.1
+  // Create ^ chevron pointing up along Y-axis
+  const leftPoint: [number, number, number] = [-size/2, -size/2, 0]
+  const tipPoint: [number, number, number] = [0, size/2, 0]
+  const rightPoint: [number, number, number] = [size/2, -size/2, 0]
+  
   return (
-    <mesh position={position} rotation={rotation}>
-      <coneGeometry args={[0.15, 0.35, 8]} />
-      <meshBasicMaterial color={BRAND_COLOR} transparent opacity={opacity} />
-    </mesh>
+    <group position={position} rotation={rotation}>
+      {/* Left line of chevron */}
+      <Line
+        points={[leftPoint, tipPoint]}
+        color={BRAND_COLOR}
+        lineWidth={4}
+        transparent
+        opacity={opacity}
+      />
+      {/* Right line of chevron */}
+      <Line
+        points={[tipPoint, rightPoint]}
+        color={BRAND_COLOR}
+        lineWidth={4}
+        transparent
+        opacity={opacity}
+      />
+    </group>
   )
 }
 
@@ -112,14 +133,14 @@ function WidthChangeEffect({ width, isVisible, opacity, zoneCenter, halfLength }
       <Line
         points={[[-halfWidth, y, z], [halfWidth, y, z]]}
         color={BRAND_COLOR}
-        lineWidth={5}
+        lineWidth={3}
         transparent
         opacity={opacity}
       />
-      {/* Left arrow */}
-      <ArrowHead position={[-halfWidth, y, z]} rotation={[0, 0, Math.PI / 2]} opacity={opacity} />
-      {/* Right arrow */}
-      <ArrowHead position={[halfWidth, y, z]} rotation={[0, 0, -Math.PI / 2]} opacity={opacity} />
+      {/* Left arrow - flat on XZ plane, pointing left (-X) */}
+      <ArrowHead position={[halfWidth, y, z]} rotation={[-Math.PI / 2, 0, -Math.PI / 2]} opacity={opacity} />
+      {/* Right arrow - flat on XZ plane, pointing right (+X) */}
+      <ArrowHead position={[-halfWidth, y, z]} rotation={[-Math.PI / 2, 0, Math.PI / 2]} opacity={opacity} />
       {/* Width value text */}
       <Text
         position={[0, 0.05, z + 0.2]}
@@ -158,7 +179,7 @@ function LengthChangeEffect({ length, isVisible, opacity, distance, width }: { l
       <Line
         points={[[x, y, startZ], [x, y, endZ]]}
         color={BRAND_COLOR}
-        lineWidth={5}
+        lineWidth={3}
         transparent
         opacity={opacity}
       />
@@ -168,7 +189,7 @@ function LengthChangeEffect({ length, isVisible, opacity, distance, width }: { l
       <ArrowHead position={[x, y, endZ]} rotation={[-Math.PI / 2, 0, 0]} opacity={opacity} />
       {/* Length value text */}
       <Text
-        position={[x + 0.6, 0.05, centerZ]}
+        position={[x + 0.05, 0.05, centerZ]}
         rotation={[-Math.PI / 2, 0, 0]}
         fontSize={0.2}
         color={BRAND_COLOR}
@@ -196,12 +217,12 @@ function HeightChangeEffect({ height, isVisible, opacity, zoneCenter, halfWidth,
       <Line
         points={[[x, 0, z], [x, height, z]]}
         color={BRAND_COLOR}
-        lineWidth={5}
+        lineWidth={3}
         transparent
         opacity={opacity}
       />
       {/* Bottom arrow */}
-      <ArrowHead position={[x, 0.15, z]} rotation={[Math.PI, 0, 0]} opacity={opacity} />
+      <ArrowHead position={[x, 0.05, z]} rotation={[Math.PI, 0, 0]} opacity={opacity} />
       {/* Top arrow */}
       <ArrowHead position={[x, height, z]} rotation={[0, 0, 0]} opacity={opacity} />
       {/* Height value text */}

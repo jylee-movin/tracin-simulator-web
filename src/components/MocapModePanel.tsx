@@ -3,10 +3,18 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Card } from '@/components/ui/card'
 
-export function MocapModePanel() {
+interface MocapModePanelProps {
+  className?: string
+}
+
+export function MocapModePanel({ className }: MocapModePanelProps) {
   const { mocapMode, setMocapMode, lightCondition } = useSimulatorStore()
 
   // Hands On is available for bright and less light conditions, disabled only for dark
+  // Note: In hands-on mode, the quality of hand gesture tracking depends on light conditions:
+  // - Bright light: Complicated hand gestures are possible with accurate tracking
+  // - Less light: Only simple hand gestures are available due to reduced visibility
+  // - Dark: Hands-on mode is completely disabled as hand tracking is not feasible
   const isHandsOnDisabled = lightCondition === 'dark'
 
   const getModeDescription = () => {
@@ -21,10 +29,10 @@ export function MocapModePanel() {
   }
 
   return (
-    <Card className="flex flex-col p-4 rounded-none border-0 border-r flex-1">
+    <Card className={`flex flex-col items-center p-4 rounded-none border-0 border-r ${className ?? ''}`}>
       <h3 className="text-sm font-semibold mb-4">Mocap Mode</h3>
-      <div className="flex flex-col gap-3">
-        <div className="flex gap-2">
+      <div className="flex flex-col gap-3 items-center">
+        <div className="flex flex-col min-[900px]:flex-row gap-2">
           <Button
             onClick={() => setMocapMode('setup')}
             variant={mocapMode === 'setup' ? 'default' : 'outline'}
@@ -56,7 +64,7 @@ export function MocapModePanel() {
             )}
           </Button>
         </div>
-        <Label className="text-sm text-muted-foreground">
+        <Label className="text-sm text-muted-foreground self-start">
           {getModeDescription()}
         </Label>
       </div>

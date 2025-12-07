@@ -3,14 +3,18 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Card } from '@/components/ui/card'
 
-export function InstallationHeightPanel() {
+interface InstallationHeightPanelProps {
+  className?: string
+}
+
+export function InstallationHeightPanel({ className }: InstallationHeightPanelProps) {
   const { installationHeight, setInstallationHeight } = useSimulatorStore()
 
   return (
-    <Card className="flex flex-col p-4 rounded-none border-0 border-r flex-1">
+    <Card className={`flex flex-col items-center p-4 rounded-none border-0 border-r ${className ?? ''}`}>
       <h3 className="text-sm font-semibold mb-4">Installation Height</h3>
-      <div className="flex flex-col gap-3">
-        <div className="flex gap-2">
+      <div className="flex flex-col gap-3 items-center">
+        <div className="flex flex-col min-[900px]:flex-row gap-2">
           <Button
             onClick={() => setInstallationHeight('tripod')}
             variant={installationHeight === 'tripod' ? 'default' : 'outline'}
@@ -28,7 +32,7 @@ export function InstallationHeightPanel() {
             Ceiling
           </Button>
         </div>
-        <Label className="text-sm text-muted-foreground">
+        <Label className="text-sm text-muted-foreground self-start">
           {installationHeight === 'tripod' ? 'On Tripod' : 'On Ceiling'}
         </Label>
       </div>
