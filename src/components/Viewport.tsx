@@ -82,7 +82,7 @@ export function Viewport() {
         
         <GizmoHelper
           alignment="bottom-right"
-          margin={[80, 80]}
+          margin={[50, 50]}
           renderOrder={2}
           onTarget={() => orbitControlsRef.current?.target}
           onUpdate={() => orbitControlsRef.current?.update()}

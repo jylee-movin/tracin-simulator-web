@@ -389,6 +389,23 @@ export function HeightEffectController() {
 }
 
 // ============================================
+// Font Preloader
+// ============================================
+
+// Preload the default font used by Text component to prevent first-render blink
+function FontPreloader() {
+  return (
+    <Text
+      position={[0, -1000, 0]}
+      fontSize={0.01}
+      fillOpacity={0}
+    >
+      {' '}
+    </Text>
+  )
+}
+
+// ============================================
 // Combined Zone Component
 // ============================================
 
@@ -396,6 +413,9 @@ export function HeightEffectController() {
 export function Zone() {
   return (
     <>
+      {/* Preload font to prevent first-render blink */}
+      <FontPreloader />
+      
       {/* Zone Visualization */}
       <ZoneVisualization />
       

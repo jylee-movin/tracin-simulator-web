@@ -11,15 +11,15 @@ export function InstallationHeightPanel({ className }: InstallationHeightPanelPr
   const { installationHeight, setInstallationHeight } = useSimulatorStore()
 
   return (
-    <Card className={`flex flex-col items-center p-4 rounded-none border-0 border-r ${className ?? ''}`}>
-      <h3 className="text-sm font-semibold mb-4">Installation Height</h3>
-      <div className="flex flex-col gap-3 items-center">
-        <div className="flex flex-col min-[900px]:flex-row gap-2">
+    <Card className={`flex flex-col items-center p-2 sm:p-4 rounded-none border-0 border-r ${className ?? ''}`}>
+      <h3 className="text-xs sm:text-sm font-semibold mb-2 sm:mb-4">Installation Height</h3>
+      <div className="flex flex-col gap-2 sm:gap-3 items-center">
+        <div className="flex flex-col min-[900px]:flex-row gap-1 sm:gap-2">
           <Button
             onClick={() => setInstallationHeight('tripod')}
             variant={installationHeight === 'tripod' ? 'default' : 'outline'}
             size="sm"
-            className="min-w-[90px]"
+            className="min-w-[60px] sm:min-w-[90px]"
           >
             Tripod
           </Button>
@@ -27,12 +27,12 @@ export function InstallationHeightPanel({ className }: InstallationHeightPanelPr
             onClick={() => setInstallationHeight('ceiling')}
             variant={installationHeight === 'ceiling' ? 'default' : 'outline'}
             size="sm"
-            className="min-w-[90px]"
+            className="min-w-[60px] sm:min-w-[90px]"
           >
             Ceiling
           </Button>
         </div>
-        <Label className="text-sm text-muted-foreground self-start">
+        <Label className="text-xs sm:text-sm text-muted-foreground self-start">
           {installationHeight === 'tripod' ? 'On Tripod' : 'On Ceiling'}
         </Label>
       </div>

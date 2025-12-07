@@ -21,11 +21,11 @@ interface DimensionInputProps {
 
 function DimensionInput({ label, value, onChange, min = 0, max }: DimensionInputProps) {
   return (
-    <div className="flex flex-col gap-2 min-w-[100px]">
-      <Label htmlFor={label.toLowerCase()} className="text-sm font-medium">
+    <div className="flex flex-col gap-1 sm:gap-2 min-w-[80px] sm:min-w-[100px]">
+      <Label htmlFor={label.toLowerCase()} className="text-xs sm:text-sm font-medium">
         {label}
       </Label>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1 sm:gap-2">
         <Input
           id={label.toLowerCase()}
           type="number"
@@ -34,9 +34,9 @@ function DimensionInput({ label, value, onChange, min = 0, max }: DimensionInput
           step="0.1"
           min={min}
           max={max}
-          className="w-20"
+          className="w-16 sm:w-20"
         />
-        <span className="text-sm text-muted-foreground">m</span>
+        <span className="text-xs sm:text-sm text-muted-foreground">m</span>
       </div>
     </div>
   )
@@ -55,9 +55,9 @@ export function ZoneSettingsPanel({ className }: ZoneSettingsPanelProps) {
   }
 
   return (
-    <Card className={`flex flex-col items-center p-4 rounded-none border-0 border-r ${className ?? ''}`}>
-      <h3 className="text-sm font-semibold mb-4">Mocap Zone Setting</h3>
-      <div className="flex flex-wrap gap-4 justify-center">
+    <Card className={`flex flex-col items-center p-2 sm:p-4 rounded-none border-0 border-r ${className ?? ''}`}>
+      <h3 className="text-xs sm:text-sm font-semibold mb-2 sm:mb-4">Mocap Zone Setting</h3>
+      <div className="flex flex-wrap gap-2 sm:gap-4 justify-center">
         <DimensionInput
           label="Width"
           value={zoneSettings.width}
