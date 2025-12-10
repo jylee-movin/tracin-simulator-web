@@ -4,6 +4,7 @@ import { OrbitControls, Grid, GizmoHelper, GizmoViewport } from '@react-three/dr
 import { DoubleSide } from 'three'
 import { useSimulatorStore } from '@/store/simulator-store'
 import { TracinModel } from './TracinModel'
+import { TrussModel } from './TrussModel'
 import { MichelleModel } from './MichelleModel'
 import { Zone } from './Zone'
 import { SceneLighting, lightSettings } from './SceneLighting'
@@ -13,8 +14,9 @@ import { CameraController } from './CameraController'
 export function Viewport() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const orbitControlsRef = useRef<any>(null)
-  const { lightCondition, mocapMode, zoneSettings } = useSimulatorStore()
+  const { lightCondition, mocapMode, zoneSettings, installationHeight } = useSimulatorStore()
   const settings = lightSettings[lightCondition]
+  const trussVisible = installationHeight === 'ceiling'
   
   return (
     <div className="flex-1 min-h-0 bg-background">
@@ -59,6 +61,14 @@ export function Viewport() {
         
         {/* Michelle Character Model (A-Pose) */}
         <MichelleModel />
+        
+        {/* Truss Models Group - Only visible in Ceiling mode */}
+        <group>
+          <TrussModel position={[2.5, 1.5,-0.5]} rotation={[0, 0, Math.PI / 2]} scale={2.5} color="#999999" visible={trussVisible} />
+          <TrussModel position={[-2.5, 1.5, -0.5]} rotation={[0, 0, Math.PI / 2]} scale={2.5} color="#999999" visible={trussVisible} />
+          <TrussModel position={[2.5, 1.5, -6.5]} rotation={[0, 0, Math.PI / 2]} scale={2.5} color="#999999" visible={trussVisible} />
+          <TrussModel position={[-2.5, 1.5, -6.5]} rotation={[0, 0, Math.PI / 2]} scale={2.5} color="#999999" visible={trussVisible} />
+        </group>
         
         {/* Camera controller for zoom animations */}
         <CameraController 
