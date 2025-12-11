@@ -1,6 +1,6 @@
-import { useRef } from 'react'
+import { useRef, Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { OrbitControls, Grid, GizmoHelper, GizmoViewport } from '@react-three/drei'
+import { OrbitControls, Grid, GizmoHelper, GizmoViewport, Loader } from '@react-three/drei'
 import { DoubleSide } from 'three'
 import { useSimulatorStore } from '@/store/simulator-store'
 import { TracinModel } from './TracinModel'
@@ -19,7 +19,7 @@ export function Viewport() {
   const trussVisible = installationHeight === 'ceiling'
   
   return (
-    <div className="flex-1 min-h-0 bg-background">
+    <div className="flex-1 min-h-0 bg-background relative">
       <Canvas
         camera={{
           position: [8, 6, 6],
@@ -31,51 +31,53 @@ export function Viewport() {
         <color attach="background" args={[settings.background]} />
         <SceneLighting lightCondition={lightCondition} />
         
-        {/* Ground plane to receive spotlight */}
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]} receiveShadow>
-          <planeGeometry args={[50, 50]} />
-          <meshStandardMaterial color="#222228" roughness={0.9} metalness={0.1} />
-        </mesh>
-        
-        {/* Ground grid for reference */}
-        <Grid
-            args={[20, 20]}
-            cellSize={1}
-            cellThickness={1}
-            cellColor="#666"
-            sectionSize={5}
-            sectionThickness={1}
-            sectionColor="#888"
-            fadeDistance={20}
-            fadeStrength={1}
-            followCamera={false}
-            infiniteGrid={true}
-            side={DoubleSide}
+        <Suspense fallback={null}>
+          {/* Ground plane to receive spotlight */}
+          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]} receiveShadow>
+            <planeGeometry args={[50, 50]} />
+            <meshStandardMaterial color="#222228" roughness={0.9} metalness={0.1} />
+          </mesh>
+          
+          {/* Ground grid for reference */}
+          <Grid
+              args={[20, 20]}
+              cellSize={1}
+              cellThickness={1}
+              cellColor="#666"
+              sectionSize={5}
+              sectionThickness={1}
+              sectionColor="#888"
+              fadeDistance={20}
+              fadeStrength={1}
+              followCamera={false}
+              infiniteGrid={true}
+              side={DoubleSide}
+            />
+          
+          {/* Zone (includes visualization and dimension effects) */}
+          <Zone />
+          
+          {/* Tracin 3D Model */}
+          <TracinModel />
+          
+          {/* Michelle Character Model (A-Pose) */}
+          <MichelleModel />
+          
+          {/* Truss Models Group - Only visible in Ceiling mode */}
+          <group>
+            <TrussModel position={[2.5, 1.5,-0.5]} rotation={[0, 0, Math.PI / 2]} scale={2.5} color="#999999" visible={trussVisible} />
+            <TrussModel position={[-2.5, 1.5, -0.5]} rotation={[0, 0, Math.PI / 2]} scale={2.5} color="#999999" visible={trussVisible} />
+            <TrussModel position={[2.5, 1.5, -6.5]} rotation={[0, 0, Math.PI / 2]} scale={2.5} color="#999999" visible={trussVisible} />
+            <TrussModel position={[-2.5, 1.5, -6.5]} rotation={[0, 0, Math.PI / 2]} scale={2.5} color="#999999" visible={trussVisible} />
+          </group>
+          
+          {/* Camera controller for zoom animations */}
+          <CameraController 
+            mocapMode={mocapMode} 
+            michelleDistance={zoneSettings.distance}
+            orbitControlsRef={orbitControlsRef}
           />
-        
-        {/* Zone (includes visualization and dimension effects) */}
-        <Zone />
-        
-        {/* Tracin 3D Model */}
-        <TracinModel />
-        
-        {/* Michelle Character Model (A-Pose) */}
-        <MichelleModel />
-        
-        {/* Truss Models Group - Only visible in Ceiling mode */}
-        <group>
-          <TrussModel position={[2.5, 1.5,-0.5]} rotation={[0, 0, Math.PI / 2]} scale={2.5} color="#999999" visible={trussVisible} />
-          <TrussModel position={[-2.5, 1.5, -0.5]} rotation={[0, 0, Math.PI / 2]} scale={2.5} color="#999999" visible={trussVisible} />
-          <TrussModel position={[2.5, 1.5, -6.5]} rotation={[0, 0, Math.PI / 2]} scale={2.5} color="#999999" visible={trussVisible} />
-          <TrussModel position={[-2.5, 1.5, -6.5]} rotation={[0, 0, Math.PI / 2]} scale={2.5} color="#999999" visible={trussVisible} />
-        </group>
-        
-        {/* Camera controller for zoom animations */}
-        <CameraController 
-          mocapMode={mocapMode} 
-          michelleDistance={zoneSettings.distance}
-          orbitControlsRef={orbitControlsRef}
-        />
+        </Suspense>
         
         {/* Temporary camera position display */}
         {/* <CameraPositionDisplay /> */}
@@ -102,6 +104,20 @@ export function Viewport() {
           <GizmoViewport axisColors={['#ef4444', '#22c55e', '#3b82f6']} labelColor="white" />
         </GizmoHelper>
       </Canvas>
+      <Loader 
+        containerStyles={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'rgba(0, 0, 0, 0.8)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 10
+        }}
+      />
     </div>
   )
 }
