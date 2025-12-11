@@ -41,7 +41,7 @@ export function CameraController({
         startPosition.current.copy(camera.position)
         
         // Adjust camera height based on installation height
-        const cameraY = installationHeight === 'ceiling' ? 1.5 : 2.0
+        const cameraY = installationHeight === 'ceiling' ? 1.5 : 2.2
         targetPosition.current.set(0, cameraY, -michelleDistance + 5.5)
         
         if (orbitControlsRef.current) {
