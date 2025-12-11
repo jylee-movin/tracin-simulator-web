@@ -1,4 +1,4 @@
-import { useRef, useState, ReactNode } from 'react'
+import { useRef, useState, type ReactNode } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Group, Mesh, MeshStandardMaterial } from 'three'
 

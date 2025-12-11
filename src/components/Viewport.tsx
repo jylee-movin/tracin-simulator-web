@@ -2,7 +2,7 @@ import { useRef, Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Grid, GizmoHelper, GizmoViewport, Loader } from '@react-three/drei'
 import { DoubleSide } from 'three'
-import { useSimulatorStore } from '@/store/simulator-store'
+import { useSimulatorStore, DEFAULT_CAMERA_POSITION, DEFAULT_TARGET } from '@/store/simulator-store'
 import { TracinModel } from './TracinModel'
 import { TrussModel } from './TrussModel'
 import { MichelleModel } from './MichelleModel'
@@ -26,7 +26,7 @@ export function Viewport() {
     <div className="flex-1 min-h-0 bg-background relative">
       <Canvas
         camera={{
-          position: [8, 6, 6],
+          position: [DEFAULT_CAMERA_POSITION.x, DEFAULT_CAMERA_POSITION.y, DEFAULT_CAMERA_POSITION.z],
           fov: 50,
           near: 0.1,
           far: 1000,
@@ -79,7 +79,8 @@ export function Viewport() {
           
           {/* Camera controller for zoom animations */}
           <CameraController 
-            mocapMode={mocapMode} 
+            mocapMode={mocapMode}
+            installationHeight={installationHeight}
             michelleDistance={zoneSettings.distance}
             orbitControlsRef={orbitControlsRef}
           />
@@ -90,7 +91,7 @@ export function Viewport() {
         
         <OrbitControls
           ref={orbitControlsRef}
-          target={[0, 0, -2]}
+          target={[DEFAULT_TARGET.x, DEFAULT_TARGET.y, DEFAULT_TARGET.z]}
           enablePan={true}
           enableZoom={true}
           enableRotate={true}

@@ -1,19 +1,17 @@
 import { useRef, useEffect } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { Vector3 } from 'three'
-import { type MocapMode } from '@/store/simulator-store'
+import { type MocapMode, type InstallationHeight, DEFAULT_CAMERA_POSITION, DEFAULT_TARGET } from '@/store/simulator-store'
 
-// Default camera positions (defined outside component to avoid recreating)
-const DEFAULT_CAMERA_POSITION = new Vector3(4, 3, 4)
-const DEFAULT_TARGET = new Vector3(0, 0, -2)
-
-// Camera controller to zoom in on Michelle when mocap mode changes
+// Camera controller to zoom in on Michelle when mocap mode or installation height changes
 export function CameraController({ 
   mocapMode, 
+  installationHeight,
   michelleDistance,
   orbitControlsRef 
 }: { 
   mocapMode: MocapMode
+  installationHeight: InstallationHeight
   michelleDistance: number
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   orbitControlsRef: React.RefObject<any>
@@ -26,10 +24,14 @@ export function CameraController({
   const startTarget = useRef(new Vector3())
   const targetTarget = useRef(new Vector3())
   const prevMocapMode = useRef<MocapMode>(mocapMode)
+  const prevInstallationHeight = useRef<InstallationHeight>(installationHeight)
   
-  // Trigger animation when mocap mode changes
+  // Trigger animation when mocap mode or installation height changes
   useEffect(() => {
-    if (prevMocapMode.current !== mocapMode) {
+    const modeChanged = prevMocapMode.current !== mocapMode
+    const heightChanged = prevInstallationHeight.current !== installationHeight
+    
+    if (modeChanged || heightChanged) {
       const michellePosition = new Vector3(0, 1, -michelleDistance)
       
       if (mocapMode === 'bodyOnly' || mocapMode === 'handsOn') {
@@ -37,7 +39,10 @@ export function CameraController({
         // Michelle is at [0, 0, -distance] facing toward Tracin (positive Z direction)
         // Camera positioned closer to origin (positive Z from Michelle) to see her front
         startPosition.current.copy(camera.position)
-        targetPosition.current.set(0, 2.0, -michelleDistance + 5.5)
+        
+        // Adjust camera height based on installation height
+        const cameraY = installationHeight === 'ceiling' ? 1.5 : 2.0
+        targetPosition.current.set(0, cameraY, -michelleDistance + 5.5)
         
         if (orbitControlsRef.current) {
           startTarget.current.copy(orbitControlsRef.current.target)
@@ -61,8 +66,9 @@ export function CameraController({
       }
       
       prevMocapMode.current = mocapMode
+      prevInstallationHeight.current = installationHeight
     }
-  }, [mocapMode, michelleDistance, camera, orbitControlsRef])
+  }, [mocapMode, installationHeight, michelleDistance, camera, orbitControlsRef])
   
   // Animate camera position
   useFrame((_, delta) => {

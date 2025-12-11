@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { Vector3 } from 'three'
 
 export const WIDTH_MIN = 1.0
 export const WIDTH_MAX = 5.0
@@ -8,6 +9,10 @@ export const HEIGHT_MIN = 2.0
 export const HEIGHT_MAX = 3.0
 export const DISTANCE_MIN = 1.5
 export const DISTANCE_MAX = 3.5
+
+// Default camera positions
+export const DEFAULT_CAMERA_POSITION = new Vector3(4, 3, 4)
+export const DEFAULT_TARGET = new Vector3(0, 0, -2)
 
 export interface ZoneSettings {
   width: number
