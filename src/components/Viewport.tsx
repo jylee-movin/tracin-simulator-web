@@ -90,6 +90,7 @@ export function Viewport() {
         
         <OrbitControls
           ref={orbitControlsRef}
+          target={[0, 0, -2]}
           enablePan={true}
           enableZoom={true}
           enableRotate={true}

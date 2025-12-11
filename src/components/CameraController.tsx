@@ -4,8 +4,8 @@ import { Vector3 } from 'three'
 import { type MocapMode } from '@/store/simulator-store'
 
 // Default camera positions (defined outside component to avoid recreating)
-const DEFAULT_CAMERA_POSITION = new Vector3(4, 4, 4)
-const DEFAULT_TARGET = new Vector3(0, 0, -4)
+const DEFAULT_CAMERA_POSITION = new Vector3(4, 3, 4)
+const DEFAULT_TARGET = new Vector3(0, 0, -2)
 
 // Camera controller to zoom in on Michelle when mocap mode changes
 export function CameraController({ 
