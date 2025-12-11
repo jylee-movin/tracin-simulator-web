@@ -1,6 +1,7 @@
 import { useGLTF } from '@react-three/drei'
 import { useEffect, useMemo } from 'react'
 import * as THREE from 'three'
+import mountModel from '../assets/mount.glb'
 
 interface MountModelProps {
   position?: [number, number, number]
@@ -15,7 +16,7 @@ export function MountModel({
   scale = 1,
   color
 }: MountModelProps) {
-  const { scene } = useGLTF('/src/assets/mount.glb')
+  const { scene } = useGLTF(mountModel)
   
   // Clone the scene to create a new instance
   const clonedScene = useMemo(() => scene.clone(), [scene])

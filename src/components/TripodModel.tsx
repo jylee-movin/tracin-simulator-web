@@ -1,6 +1,7 @@
 import { useGLTF } from '@react-three/drei'
 import { useEffect, useMemo } from 'react'
 import * as THREE from 'three'
+import tripodModel from '../assets/tripod.glb'
 
 interface TripodModelProps {
   position?: [number, number, number]
@@ -15,7 +16,7 @@ export function TripodModel({
   scale = 1,
   color
 }: TripodModelProps) {
-  const { scene } = useGLTF('/src/assets/tripod.glb')
+  const { scene } = useGLTF(tripodModel)
   
   // Clone the scene to create a new instance
   const clonedScene = useMemo(() => scene.clone(), [scene])
