@@ -29,8 +29,8 @@ export function MocapModePanel({ className }: MocapModePanelProps) {
   }
 
   return (
-    <Card className={`flex flex-col items-center p-2 sm:p-4 rounded-none border-0 border-r ${className ?? ''}`}>
-      <h3 className="text-xs sm:text-sm font-semibold mb-2 sm:mb-4">Mocap Mode</h3>
+    <Card className={`flex flex-col items-center justify-start p-2 sm:p-4 rounded-none border-0 border-r ${className ?? ''}`}>
+      <h3 className="text-xm font-semibold mb-2 sm:mb-2">Mocap Mode</h3>
       <div className="flex flex-col gap-2 sm:gap-3 items-center">
         <div className="flex flex-col min-[900px]:flex-row gap-1 sm:gap-2">
           <Button
