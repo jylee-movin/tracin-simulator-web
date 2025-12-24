@@ -17,7 +17,7 @@ export function ControlPanel({ isOpen = true, onClose, onOpen }: ControlPanelPro
       {/* Desktop: Always visible, Mobile/Tablet: Show when open */}
       <div className={`${isOpen ? 'flex' : 'hidden lg:flex'} flex-col w-full min-w-0 flex-1 lg:flex-none lg:w-[554px] lg:h-full lg:border-l bg-white overflow-y-auto overflow-x-hidden`}>
         <div className="px-4 lg:px-[69px] pt-4 lg:pt-[43px] pb-4 lg:pb-[6px] bg-white relative">
-          <h1 className="text-[24px] lg:text-[40px] font-semibold text-[#1A1A1A] tracking-tight leading-tight">Visualization</h1>
+          <h1 className="text-[24px] lg:text-[28px] font-semibold text-[#1A1A1A] tracking-tight leading-tight">Visualization</h1>
           {/* Mobile/Tablet close button */}
           <button
             onClick={onClose}

@@ -113,7 +113,7 @@ export function ZoneSettingsPanel() {
   return (
     <Card className="flex flex-col gap-2 lg:gap-[11px] px-4 lg:px-[69px] pt-0 lg:pt-0 pb-3 lg:pb-[8px] rounded-none border-0 border-b shadow-none bg-white">
       <div className="mb-0 flex items-baseline gap-2 lg:block lg:space-y-1">
-        <h3 className="text-[13px] lg:text-[24px] font-semibold text-[#1A1A1A] tracking-tight leading-none">
+        <h3 className="text-[13px] lg:text-[22px] font-semibold text-[#1A1A1A] tracking-tight leading-none">
           Zone Setting
         </h3>
         <p className="text-[8px] lg:text-[14px] text-[#BFBFBF] tracking-normal font-normal leading-[8px] lg:leading-tight">

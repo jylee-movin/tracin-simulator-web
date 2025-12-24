@@ -11,9 +11,11 @@ export function InstallationHeightPanel({ className }: { className?: string }) {
 
   return (
     <Card className={cn("flex flex-col gap-[4px] lg:gap-[10px] min-w-0 px-4 lg:px-[69px] pt-4 lg:pt-0 pb-4 lg:pb-[20px] rounded-none border-0 border-b shadow-none bg-white lg:flex-1", className)}>
-      <div className="mb-0 space-y-[4px] lg:space-y-1">
-        <h3 className="text-[13px] lg:text-[24px] font-semibold text-[#1A1A1A] tracking-tight leading-none whitespace-normal">Installation Height</h3>
-        <Label className="text-[8px] lg:text-[14px] text-[#BFBFBF] tracking-normal font-normal leading-[8px] lg:leading-tight">
+      <div className="mb-0 space-y-[4px] lg:space-y-0 lg:flex lg:items-baseline lg:gap-[7px] min-w-0">
+        <h3 className="text-[13px] lg:text-[22px] font-semibold text-[#1A1A1A] tracking-tight leading-none whitespace-normal lg:whitespace-nowrap flex-none">
+          Installation Height
+        </h3>
+        <Label className="text-[8px] lg:text-[11px] text-[#BFBFBF] tracking-normal font-normal leading-[8px] lg:leading-none flex-1 min-w-0 truncate">
           {installationHeight === 'tripod' ? 'On Tripod' : 'On Ceiling'}
         </Label>
       </div>
@@ -22,7 +24,7 @@ export function InstallationHeightPanel({ className }: { className?: string }) {
           onClick={() => setInstallationHeight('tripod')}
           variant={installationHeight === 'tripod' ? 'default' : 'outline'}
           className={cn(
-            "flex-1 h-[36px] lg:w-[140px] lg:h-[54px] lg:flex-none flex-col items-center justify-center gap-1 min-w-0 px-2 sm:px-5 text-[8px] lg:text-[13px] xl:text-[15px] leading-none rounded-none lg:rounded-[16px] border-0",
+            "flex-1 h-[36px] lg:w-[140px] lg:h-[54px] lg:flex-none flex-col items-center justify-center gap-1 min-w-0 px-2 sm:px-5 text-[8px] lg:text-[13px] leading-none rounded-none lg:rounded-[16px] border-0",
             installationHeight === 'tripod'
               ? ""
               : "bg-transparent hover:bg-[#e8e8e8] lg:bg-[#f0f0f0] lg:hover:bg-[#e8e8e8] lg:border lg:border-[#e2e2e2] lg:rounded-[16px]"
@@ -42,7 +44,7 @@ export function InstallationHeightPanel({ className }: { className?: string }) {
           onClick={() => setInstallationHeight('ceiling')}
           variant={installationHeight === 'ceiling' ? 'default' : 'outline'}
           className={cn(
-            "flex-1 h-[36px] lg:w-[140px] lg:h-[54px] lg:flex-none flex-col items-center justify-center gap-1 min-w-0 px-2 sm:px-5 text-[8px] lg:text-[13px] xl:text-[15px] leading-none rounded-none lg:rounded-[16px] border-0",
+            "flex-1 h-[36px] lg:w-[140px] lg:h-[54px] lg:flex-none flex-col items-center justify-center gap-1 min-w-0 px-2 sm:px-5 text-[8px] lg:text-[13px] leading-none rounded-none lg:rounded-[16px] border-0",
             installationHeight === 'ceiling'
               ? ""
               : "bg-transparent hover:bg-[#e8e8e8] lg:bg-[#f0f0f0] lg:hover:bg-[#e8e8e8] lg:border lg:border-[#e2e2e2] lg:rounded-[16px]"
